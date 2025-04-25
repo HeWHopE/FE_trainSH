@@ -7,7 +7,7 @@ import {
 
 import userSlice from "./slices/user.slice";
 
-const loggerMiddleware: Middleware = (store) => (next) => (action) => {
+const loggerMiddleware: Middleware = () => (next) => (action) => {
   return next(action);
 };
 

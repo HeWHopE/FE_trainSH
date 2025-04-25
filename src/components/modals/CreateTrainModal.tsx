@@ -58,13 +58,7 @@ const CreateTrainModal: React.FC<CreateTrainModalProps> = ({
     isOpen && (
       <>
         {/* Background Overlay */}
-        <div
-          className="fixed inset-0 bg-black opacity-50 z-10"
-          onClick={(e) => {
-            console.log(13);
-            onClose;
-          }}
-        ></div>
+        <div className="fixed inset-0 bg-black opacity-50 z-10"></div>
 
         {/* Modal Content */}
         <div className="fixed inset-0 flex items-center justify-center z-20">

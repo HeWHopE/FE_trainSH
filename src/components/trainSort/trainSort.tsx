@@ -32,15 +32,15 @@ const Sort: React.FC<SortProps> = ({
   const onClickHandler = (item: string): void => {
     console.log("123");
     setSelectLabel(item);
-    callback && callback({ label: item });
+    callback({ label: item });
 
     if (selectLabel === item) {
       const newOrder = selectOrder === "asc" ? "desc" : "asc";
       setSelectOrder(newOrder);
-      callback && callback({ order: newOrder });
+      callback({ order: newOrder });
     } else {
       setSelectOrder("asc");
-      callback && callback({ order: "asc" });
+      callback({ order: "asc" });
     }
     setShowDropDown(false);
   };

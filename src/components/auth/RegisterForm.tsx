@@ -1,7 +1,6 @@
 "use client";
 
 import { signUp } from "@/api/auth-api";
-import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../button/button";
@@ -13,7 +12,7 @@ export default function RegisterForm({
 }) {
   const [email, setEmail] = useState("");
   const [name, setname] = useState("");
-  const router = useRouter();
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -32,9 +31,11 @@ export default function RegisterForm({
         name: name,
       });
 
-      setIsLoading(false);
-      toast.success("Account sucessfullly created");
-      setIsLogin(true);
+      if (response) {
+        setIsLoading(false);
+        toast.success("Account sucessfullly created");
+        setIsLogin(true);
+      }
     } catch (error) {
       console.error("Error registering user:", error);
       setIsLoading(false);

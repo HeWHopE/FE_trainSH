@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 interface AuthPayload {
   email: string;
   password: string;
@@ -7,7 +9,9 @@ interface AuthPayload {
 export const signIn = async ({
   email,
   password,
-}: AuthPayload): Promise<{ access_token: string; refresh_token: string }> => {
+}: AuthPayload): Promise<
+  { access_token: string; refresh_token: string } | undefined
+> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/auth/signin`,
@@ -26,8 +30,11 @@ export const signIn = async ({
     }
 
     return await response.json();
-  } catch (err: any) {
-    throw new Error(err.message || "Failed to sign in");
+  } catch (err) {
+    console.log(err);
+    toast.error("Failed to login");
+    // Return undefined or handle it differently if needed
+    return undefined;
   }
 };
 
@@ -50,7 +57,9 @@ export const signUp = async ({ email, password, name }: AuthPayload) => {
     }
 
     return await response.json();
-  } catch (err: any) {
-    throw new Error(err.message || "Failed to sign up");
+  } catch (err) {
+    console.log(err);
+
+    toast.error("Faild to login");
   }
 };

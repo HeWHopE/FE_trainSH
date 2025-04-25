@@ -29,7 +29,7 @@ export const createTrain = async (
   return await response.json();
 };
 
-export const deleteTrain = async (id: number): Promise<any> => {
+export const deleteTrain = async (id: number) => {
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem(LOCAL_STORAGE_TOKEN)
@@ -57,7 +57,7 @@ export const deleteTrain = async (id: number): Promise<any> => {
 export const updateTrain = async (
   id: number,
   updateTrainDto: UpdateTrainDto
-): Promise<any> => {
+) => {
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem(LOCAL_STORAGE_TOKEN)

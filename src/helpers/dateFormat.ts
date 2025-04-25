@@ -1,5 +1,3 @@
-// src/utils/dateUtils.ts
-
 export const formatDate = (date: Date): string => {
   const d = new Date(date);
   const day = String(d.getDate()).padStart(2, "0");

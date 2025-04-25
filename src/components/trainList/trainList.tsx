@@ -161,6 +161,7 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
         setFilteredTrains(results);
         setSearchError(null);
       } catch (error) {
+        console.log(error);
         setSearchError("Failed to search trains");
         setFilteredTrains([]);
       }

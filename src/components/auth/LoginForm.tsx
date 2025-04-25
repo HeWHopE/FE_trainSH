@@ -17,7 +17,7 @@ export default function LoginForm() {
     try {
       const response = await signIn({ email: email, password: password });
 
-      if (response.access_token) {
+      if (response?.access_token) {
         localStorage.setItem("access_token", response.access_token);
         localStorage.setItem("refresh_token", response.refresh_token);
         toast.success("Succsessfuly logged in");
