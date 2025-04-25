@@ -12,6 +12,7 @@ function DashboardContent() {
   const router = useRouter();
   const user = useAppSelector((state) => state.user.data);
   const [trains, setTrains] = useState<TrainDto[]>([]);
+
   console.log(trains);
   const handleLogout = () => {
     localStorage.removeItem("access_token");
@@ -23,7 +24,7 @@ function DashboardContent() {
     const FetchTrains = async () => {
       if (user?.id) {
         const trains = await getTrainsByUserId(user?.id);
-        console.log(trains);
+
         if (trains.length) {
           setTrains(trains);
         }
@@ -31,7 +32,7 @@ function DashboardContent() {
     };
 
     FetchTrains();
-  });
+  }, [user?.id]);
 
   return (
     <div className="min-h-screen bg-gray-50">
