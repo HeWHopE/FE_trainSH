@@ -1,10 +1,17 @@
-import { createTrain, searchTrains, updateTrain } from "@/api/train-api";
+import {
+  createTrain,
+  deleteTrain,
+  searchTrains,
+  updateTrain,
+} from "@/api/train-api";
 import { formatDate } from "@/helpers/dateFormat";
 import { CreateTrainDto, TrainDto, UpdateTrainDto } from "@/models/train";
+import { Edit, Trash2 } from "lucide-react";
 
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CreateTrainModal from "../modals/CreateTrainModal";
+import DeleteTrainModal from "../modals/DeleteTrainModal";
 import UpdateTrainModal from "../modals/UpdateTrainModal";
 import Sort from "../trainSort/trainSort";
 import { SortColumn, SortDirection } from "../types/sortTypes";
@@ -17,6 +24,8 @@ interface TrainListProps {
 const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [trainToEdit, setTrainToEdit] = useState<TrainDto | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTrains, setFilteredTrains] = useState<TrainDto[]>(trains);
@@ -88,6 +97,10 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
     setIsUpdateModalOpen((prev) => !prev);
   };
 
+  const toggleDeleteModal = () => {
+    setIsDeleteModalOpen((prev) => !prev);
+  };
+
   const onCreateTrain = async (train: CreateTrainDto) => {
     const response = await createTrain(train);
 
@@ -143,9 +156,36 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
     }
   };
 
+  const onDelete = async (trainId: number) => {
+    try {
+      const response = await deleteTrain(trainId);
+
+      if (response) {
+        toast.success("Train deleted successfully");
+        setTrains((prevTrains) => prevTrains.filter((t) => t.id !== trainId));
+        setFilteredTrains((prevTrains) =>
+          prevTrains.filter((t) => t.id !== trainId)
+        );
+
+        setIsDeleteModalOpen(false);
+      } else {
+        toast.error("Failed to delete the train. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting train:", error);
+      toast.error("An error occurred while deleting the train.");
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   const handleEditClick = (train: TrainDto) => {
     setTrainToEdit(train);
     setIsUpdateModalOpen(true);
+  };
+
+  const handleDeleteClick = (train: TrainDto) => {
+    setTrainToEdit(train);
+    setIsDeleteModalOpen(true);
   };
 
   const debouncedSearch = (query: string) => {
@@ -288,12 +328,21 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
                   <td className="px-4 py-2 text-sm sm:text-base">
                     {train.destination}
                   </td>
-                  <td className="px-4 py-2">
+
+                  <td className="px-4 py-2 flex gap-2">
                     <button
                       onClick={() => handleEditClick(train)}
-                      className="text-indigo-600 hover:text-indigo-800 text-sm sm:text-base"
+                      className="text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                      aria-label="Edit Train"
                     >
-                      Edit
+                      <Edit size={20} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(train)}
+                      className="text-red-600 hover:text-red-800 cursor-pointer"
+                      aria-label="Delete Train"
+                    >
+                      <Trash2 size={20} />
                     </button>
                   </td>
                 </tr>
@@ -314,6 +363,15 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
           isOpen={isUpdateModalOpen}
           onClose={toggleUpdateModal}
           onSave={onUpdateTrain}
+          trainData={trainToEdit}
+        />
+      )}
+
+      {trainToEdit && (
+        <DeleteTrainModal
+          isOpen={isDeleteModalOpen}
+          onClose={toggleDeleteModal}
+          onDelete={onDelete}
           trainData={trainToEdit}
         />
       )}

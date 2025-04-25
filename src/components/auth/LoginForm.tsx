@@ -24,8 +24,6 @@ export default function LoginForm() {
 
         dispatch(loadCurrentUser());
         router.push("/dashboard");
-      } else {
-        toast.warn("Error logging in");
       }
     } catch (error) {
       console.error("Error logging in:", error);
