@@ -76,7 +76,7 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
   }, [sortColumn, sortDirection]);
   useEffect(() => {
     if (!searchQuery || searchQuery === "") {
-      setFilteredTrains(trains); // If no search query, show all trains
+      setFilteredTrains(trains);
     }
   }, [trains, searchQuery]);
 
@@ -94,9 +94,9 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
     if (response) {
       toast.success("Train created successfully");
       setIsCreateModalOpen(false);
-      // Add new train to the trains array
+
       setTrains((prevTrains) => [...prevTrains, response]);
-      // Update filtered trains if the new train matches the search query
+
       if (
         searchQuery &&
         (response.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -117,13 +117,13 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
       if (response) {
         toast.success("Train updated successfully");
         setIsUpdateModalOpen(false);
-        // Update the specific train in the trains array
+
         setTrains((prevTrains) =>
           prevTrains.map((t) =>
             t.id === trainToEdit.id ? { ...t, ...response } : t
           )
         );
-        // Update filtered trains if the updated train matches the search query
+
         if (
           searchQuery &&
           (response.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -135,7 +135,6 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
             )
           );
         } else if (searchQuery) {
-          // Remove from filtered if it no longer matches
           setFilteredTrains((prev) =>
             prev.filter((t) => t.id !== trainToEdit.id)
           );
@@ -168,14 +167,12 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
     }, 300);
   };
 
-  // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
     debouncedSearch(query);
   };
 
-  // Clear search
   const clearSearch = () => {
     setSearchQuery("");
     setFilteredTrains(trains);
@@ -184,7 +181,7 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
 
   return (
     <div className="bg-white p-4 sm:p-6 rounded-md shadow-md">
-      <div className="flex flex-col justify-between items-center mb-4 sm:flex-col sm:gap-2  xsm:flex-col xsm:gap-2">
+      <div className="flex flex-col justify-between items-center mb-4 sm:flex-row gap-3">
         <h2 className="text-lg sm:text-xl font-bold text-gray-900">
           Your Trains
         </h2>
@@ -194,7 +191,7 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
               type="text"
               value={searchQuery}
               onChange={handleSearchChange}
-              placeholder="Search by name or number..."
+              placeholder="Search by name..."
               className="w-full sm:w-64 px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             {searchQuery && (

@@ -8,11 +8,11 @@ import DefaultLoading from "./loader";
 /**
  *
  * @param children
- * Component with global API | Websocket logic
+ *
  */
 
 interface PagesWrapperProps {
-  children: React.ReactNode; // Update this to React.ReactNode
+  children: React.ReactNode;
 }
 
 const PagesWrapper: React.FC<PagesWrapperProps> = ({ children }) => {

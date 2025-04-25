@@ -31,7 +31,6 @@ const CreateTrainModal: React.FC<CreateTrainModalProps> = ({
       date = new Date(date);
     }
 
-    // Ensure it's a valid Date object
     if (date instanceof Date && !isNaN(date.getTime())) {
       return date.toISOString().slice(0, 16);
     }

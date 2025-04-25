@@ -42,7 +42,7 @@ const Sort: React.FC<SortProps> = ({
       setSelectOrder("asc");
       callback && callback({ order: "asc" });
     }
-    setShowDropDown(false); // Close dropdown after selection
+    setShowDropDown(false);
   };
 
   return (

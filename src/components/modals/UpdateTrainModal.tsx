@@ -4,8 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-// Define the schema for Yup validation (make fields optional)
-
 interface UpdateTrainModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -40,7 +38,6 @@ const UpdateTrainModal: React.FC<UpdateTrainModalProps> = ({
       date = new Date(date);
     }
 
-    // Ensure it's a valid Date object
     if (date instanceof Date && !isNaN(date.getTime())) {
       return date.toISOString().slice(0, 16);
     }
@@ -59,8 +56,8 @@ const UpdateTrainModal: React.FC<UpdateTrainModalProps> = ({
   }, [trainData, setValue]);
 
   const onSubmit = (data: UpdateTrainDto) => {
-    onSave(data); // Pass data to the parent component
-    onClose(); // Close the modal after saving
+    onSave(data);
+    onClose();
   };
 
   return (
@@ -89,7 +86,7 @@ const UpdateTrainModal: React.FC<UpdateTrainModalProps> = ({
                       <input
                         type="text"
                         {...field}
-                        value={field.value ?? ""} // Ensure value is never null or undefined
+                        value={field.value ?? ""}
                         className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
                       />
                     )}
@@ -112,7 +109,7 @@ const UpdateTrainModal: React.FC<UpdateTrainModalProps> = ({
                       <input
                         type="text"
                         {...field}
-                        value={field.value ?? ""} // Ensure value is never null or undefined
+                        value={field.value ?? ""}
                         className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
                       />
                     )}
@@ -135,7 +132,7 @@ const UpdateTrainModal: React.FC<UpdateTrainModalProps> = ({
                       <input
                         type="text"
                         {...field}
-                        value={field.value ?? ""} // Ensure value is never null or undefined
+                        value={field.value ?? ""}
                         className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
                       />
                     )}

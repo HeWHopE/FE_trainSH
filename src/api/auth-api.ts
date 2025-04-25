@@ -1,9 +1,7 @@
-// src/api/auth-api.ts
-
 interface AuthPayload {
   email: string;
   password: string;
-  name?: string; // optional for signin
+  name?: string;
 }
 
 export const signIn = async ({
@@ -27,7 +25,7 @@ export const signIn = async ({
       throw new Error(error.message || "Sign-in failed");
     }
 
-    return await response.json(); // return { accessToken, user, etc }
+    return await response.json();
   } catch (err: any) {
     throw new Error(err.message || "Failed to sign in");
   }
@@ -51,7 +49,7 @@ export const signUp = async ({ email, password, name }: AuthPayload) => {
       throw new Error(error.message || "Sign-up failed");
     }
 
-    return await response.json(); // return { success: true, message: "..." }
+    return await response.json();
   } catch (err: any) {
     throw new Error(err.message || "Failed to sign up");
   }

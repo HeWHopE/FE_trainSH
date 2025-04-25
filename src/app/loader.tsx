@@ -15,7 +15,3 @@ export default function Loader() {
     </div>
   );
 }
-
-// Usage: Emit a custom event to show or hide the loader
-// To show: window.dispatchEvent(new Event("loader:start"));
-// To hide: window.dispatchEvent(new Event("loader:stop"));

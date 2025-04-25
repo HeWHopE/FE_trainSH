@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/api/user-api"; // API to fetch the current user
+import { getCurrentUser } from "@/api/user-api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserModel } from "../../models/user.model";
 import { RootState } from "../index";
@@ -17,7 +17,7 @@ export const loadCurrentUser = createAsyncThunk<UserModel>(
     if (userData) {
     }
 
-    return userData; // Directly return user data
+    return userData;
   }
 );
 

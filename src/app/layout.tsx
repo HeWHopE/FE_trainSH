@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode; // Ensure children is typed as ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -31,7 +31,6 @@ export default function RootLayout({
           <PagesWrapper>{children}</PagesWrapper>
         </ReduxProvider>
 
-        {/* Place ToastContainer inside the body, not the html tag */}
         <ToastContainer position="top-right" autoClose={5000} />
       </body>
     </html>
