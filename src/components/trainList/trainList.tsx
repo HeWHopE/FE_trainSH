@@ -4,16 +4,16 @@ import {
   searchTrains,
   updateTrain,
 } from "@/api/train-api";
-import { formatDate } from "@/helpers/dateFormat";
 import { CreateTrainDto, TrainDto, UpdateTrainDto } from "@/models/train";
-import { Edit, Trash2 } from "lucide-react";
 
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { FiLoader } from "react-icons/fi";
 import { toast } from "react-toastify";
 import CreateTrainModal from "../modals/CreateTrainModal";
 import DeleteTrainModal from "../modals/DeleteTrainModal";
 import UpdateTrainModal from "../modals/UpdateTrainModal";
 import Sort from "../trainSort/trainSort";
+import TrainTable from "../traindTable/trainTable";
 import { SortColumn, SortDirection } from "../types/sortTypes";
 
 interface TrainListProps {
@@ -30,6 +30,7 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTrains, setFilteredTrains] = useState<TrainDto[]>(trains);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
 
   const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -189,6 +190,7 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
   };
 
   const debouncedSearch = (query: string) => {
+    setIsSearchLoading(true);
     setTimeout(async () => {
       if (!query) {
         setFilteredTrains(trains);
@@ -200,7 +202,10 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
         const results = await searchTrains(query);
         setFilteredTrains(results);
         setSearchError(null);
+        setIsSearchLoading(false);
       } catch (error) {
+        setIsSearchLoading(false);
+
         console.log(error);
         setSearchError("Failed to search trains");
         setFilteredTrains([]);
@@ -235,7 +240,13 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
               placeholder="Search by name..."
               className="w-full sm:w-64 px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            {searchQuery && (
+            {isSearchLoading && (
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                <FiLoader className="animate-spin text-gray-500" size={20} />
+              </div>
+            )}
+
+            {searchQuery && !isSearchLoading && (
               <button
                 onClick={clearSearch}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
@@ -276,81 +287,13 @@ const TrainList: React.FC<TrainListProps> = ({ trains, setTrains }) => {
       {searchError && (
         <p className="text-red-500 text-sm mb-4">{searchError}</p>
       )}
-      <div className="mt-4 overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse border border-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left text-sm sm:text-base">
-                Train Name
-              </th>
-              <th className="px-4 py-2 text-left text-sm sm:text-base">
-                Departure
-              </th>
-              <th className="px-4 py-2 text-left text-sm sm:text-base">
-                Arrival
-              </th>
-              <th className="px-4 py-2 text-left text-sm sm:text-base">
-                Origin
-              </th>
-              <th className="px-4 py-2 text-left text-sm sm:text-base">
-                Destination
-              </th>
-              <th className="px-4 py-2 text-left text-sm sm:text-base">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTrains.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="px-4 py-2 text-center text-gray-500 text-sm sm:text-base"
-                >
-                  {searchQuery ? "No trains found." : "No trains available."}
-                </td>
-              </tr>
-            ) : (
-              filteredTrains.map((train) => (
-                <tr key={train.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 text-sm sm:text-base">
-                    {train.name}
-                  </td>
-                  <td className="px-4 py-2 text-sm sm:text-base">
-                    {formatDate(train.departure)}
-                  </td>
-                  <td className="px-4 py-2 text-sm sm:text-base">
-                    {formatDate(train.arrival)}
-                  </td>
-                  <td className="px-4 py-2 text-sm sm:text-base">
-                    {train.origin}
-                  </td>
-                  <td className="px-4 py-2 text-sm sm:text-base">
-                    {train.destination}
-                  </td>
 
-                  <td className="px-4 py-2 flex gap-2">
-                    <button
-                      onClick={() => handleEditClick(train)}
-                      className="text-indigo-600 hover:text-indigo-800 cursor-pointer"
-                      aria-label="Edit Train"
-                    >
-                      <Edit size={20} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(train)}
-                      className="text-red-600 hover:text-red-800 cursor-pointer"
-                      aria-label="Delete Train"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      <TrainTable
+        filteredTrains={filteredTrains}
+        searchQuery={searchQuery}
+        handleEditClick={handleEditClick}
+        handleDeleteClick={handleDeleteClick}
+      />
 
       <CreateTrainModal
         isOpen={isCreateModalOpen}

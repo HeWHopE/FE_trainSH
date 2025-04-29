@@ -6,18 +6,24 @@ import { loadCurrentUser } from "@/store/slices/user.slice";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import Button from "../button/button";
 
-export default function LoginForm() {
+const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const [password, setPassword] = useState("");
   const router = useRouter();
   const dispatch = useAppDispatch();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const response = await signIn({ email: email, password: password });
 
       if (response?.access_token) {
+        setIsLoading(false);
+
         localStorage.setItem("access_token", response.access_token);
         localStorage.setItem("refresh_token", response.refresh_token);
         toast.success("Succsessfuly logged in");
@@ -26,6 +32,8 @@ export default function LoginForm() {
         router.push("/dashboard");
       }
     } catch (error) {
+      setIsLoading(false);
+
       console.error("Error logging in:", error);
     }
   };
@@ -85,12 +93,15 @@ export default function LoginForm() {
           </label>
         </div>
       </div>
-      <button
+      <Button
+        isLoading={isLoading}
         type="submit"
         className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200"
       >
         Sign in
-      </button>
+      </Button>
     </form>
   );
-}
+};
+
+export default LoginForm;
